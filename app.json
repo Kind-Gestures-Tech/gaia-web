@@ -1,0 +1,11 @@
+{
+    "name": "gaia-web",
+    "options": {
+        "allow-unauthenticated": true,
+        "memory": "256Mi",
+        "cpu": "1",
+        "port": 80,
+	"host":"0.0.0.0",
+        "http2": false
+    }
+}
