@@ -30,7 +30,7 @@ export default function Home() {
       icon: <HeartPulse size={50} />,
       featureName: "Mental Health Support and Coping Strategies",
       shortDescription:
-        "Receive mental health support through coping strategies, relaxation techniques, and personal companionship.",
+        "Receive mental health support through relaxation techniques, medical assistance and personal companionship.",
     },
     {
       icon: <PersonStanding size={50} />,
@@ -43,10 +43,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Gaia - Your Healthcare Ally</title>
+        <title>Gaia - Your Healthcare Support</title>
         <meta
           name="description"
-          content="Your all-in-one solution for personalized health recommendations, reliable medical insights, mental health support, and interactive 3D character guidance. Available in local languages for a truly personalized experience."
+          content="Your all-in-one solution for personalized health recommendations, reliable medical insights, mental health support, and interactive 3D character guidance."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
