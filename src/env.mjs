@@ -10,17 +10,22 @@ export const env = createEnv({
     DATABASE_URL: z.string().url().optional(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET: z.string().min(1).optional(),
-    NEXTAUTH_URL: z.preprocess(
-      // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-      // Since NextAuth.js automatically uses the VERCEL_URL if present.
-      (str) => process.env.VERCEL_URL ?? str,
-      // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string().min(1) : z.string().url()
-    ).optional(),
+    NEXTAUTH_URL: z
+      .preprocess(
+        // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+        // Since NextAuth.js automatically uses the VERCEL_URL if present.
+        (str) => process.env.VERCEL_URL ?? str,
+        // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+        process.env.VERCEL ? z.string().min(1) : z.string().url()
+      )
+      .optional(),
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
     ELEVENLABS_API_KEY: z.string().optional(),
+    ADMIN_URL: z.string().optional(),
+    DOCTOR_URL: z.string().optional(),
+    PATIENT_URL: z.string().optional(),
   },
 
   /**
@@ -29,8 +34,11 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_BACKEND_URL : z.string().url().optional(),
+    NEXT_PUBLIC_BACKEND_URL: z.string().url().optional(),
     NEXT_PUBLIC_DEEPGRAM_API_KEY: z.string().optional(),
+    NEXT_PUBLIC_ADMIN_URL: z.string().optional(),
+    NEXT_PUBLIC_DOCTOR_URL: z.string().optional(),
+    NEXT_PUBLIC_PATIENT_URL: z.string().optional(),
   },
 
   /**
@@ -47,6 +55,12 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_DEEPGRAM_API_KEY: process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY,
+    ADMIN_URL: process.env.ADMIN_URL,
+    DOCTOR_URL: process.env.DOCTOR_URL,
+    PATIENT_URL: process.env.PATIENT_URL,
+    NEXT_PUBLIC_ADMIN_URL: process.env.NEXT_PUBLIC_ADMIN_URL,
+    NEXT_PUBLIC_DOCTOR_URL: process.env.NEXT_PUBLIC_DOCTOR_URL,
+    NEXT_PUBLIC_PATIENT_URL: process.env.NEXT_PUBLIC_PATIENT_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

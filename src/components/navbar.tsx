@@ -8,15 +8,46 @@ import { GrFormClose } from "react-icons/gr";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { LogIn, LogOut, Menu } from "lucide-react";
 
-export function useSession2(){
-       const mockSession = { expires: new Date(Date.now() + 2 * 86400).toISOString(), user: { name: "admin", email:"johnsonchetty@gmail.com", id:"1"}};
-       return {data: mockSession, status: 'authenticated'};
-}
-
-
 export function MainNav() {
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  const renderRoleSpecificLinks = () => {
+    if (!session) return null;
+
+    switch (session.user.role) {
+      case "SYSTEM_ADMIN":
+        return (
+          <>
+            <Link href={process.env.ADMIN_URL} className="nav-link">
+              Admin Dashboard
+            </Link>
+            {/* Add more admin-specific links here */}
+          </>
+        );
+      case "DOCTOR":
+        return (
+          <>
+            <Link href={process.env.DOCTOR_URL} className="nav-link">
+              Doctor Dashboard
+            </Link>
+            {/* Add more doctor-specific links here */}
+          </>
+        );
+      case "PATIENT":
+        return (
+          <>
+            <Link href={process.env.PATIENT_URL} className="nav-link">
+              Patient Dashboard
+            </Link>
+            {/* Add more patient-specific links here */}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between gap-6 bg-white bg-opacity-30 px-10 py-3 backdrop-blur-lg dark:bg-black md:gap-10">
@@ -31,17 +62,25 @@ export function MainNav() {
         >
           {showMobileMenu ? <GrFormClose className="h-5 w-5" /> : <Menu />}
         </button>
+
         <div className="hidden items-center space-x-5 md:flex">
-          <Button onClick={session ? () => signOut() : () => signIn("google")}>
-            {session ? "Sign Out" : "Sign In"}
-            {session ? (
+          {status === "authenticated" ? (
+            <>
+              {renderRoleSpecificLinks()}
+              <Button onClick={() => signOut()}>
+                Sign Out
+                <LogOut className="ml-2" size={18} />
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => signIn()}>
+              Sign In
               <LogIn className="ml-2" size={18} />
-            ) : (
-              <LogOut className="ml-2" size={18} />
-            )}
-          </Button>
+            </Button>
+          )}
           <ModeToggle />
         </div>
+
         {showMobileMenu && <MobileNav session={session} />}
       </div>
       <div className="h-[1px] bg-black opacity-50 dark:bg-[#F8515E]"></div>
