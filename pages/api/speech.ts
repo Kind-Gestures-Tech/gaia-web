@@ -1,11 +1,11 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import type { NextApiHandler } from "next";
-import { env } from "~/env.mjs";
 
 const handler: NextApiHandler = async (req, res) => {
   const { method } = req;
   if (method === "GET") {
     const { text, gender } = req.query;
+    const { env } = await import("env.js");
     const API_KEY = env.ELEVENLABS_API_KEY;
     const VOICE_ID =
       gender == "f" ? "EXAVITQu4vr4xnSDxMaL" : "GBv7mTt0atIp3Br8iCZE";

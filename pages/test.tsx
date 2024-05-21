@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { Canvas } from "@react-three/fiber";
 import { Environment, OrbitControls, useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import Avatar from "src/components/3d/avatar1";
+import Avatar from "components/3d/avatar1";
 const Test: NextPage = ({}) => {
   return (
     <div>

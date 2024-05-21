@@ -1,17 +1,13 @@
 import Head from "next/head";
-import { MainNav } from "~/components/navbar";
-import Chat from "~/components/chat";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "src/components/ui/popover";
-import { Button } from "~/components/ui/button";
+import { MainNav } from "components/navbar";
+import Chat from "components/chat";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
+import { Button } from "components/ui/button";
 import { MessageSquare } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, OrbitControls, useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import Avatar from "src/components/3d/avatar1";
+import Avatar from "components/3d/avatar1";
 import axios from "axios";
 import { use, useEffect, useState } from "react";
 interface MessageQueue {
@@ -40,7 +36,7 @@ export default function Home() {
         },
       }
     );
-    
+
     setMessageQueue((prev) => [{ lipSync: data, audio: audio }, ...prev]);
   };
 

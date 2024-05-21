@@ -19,7 +19,10 @@ export function MainNav() {
       case "SYSTEM_ADMIN":
         return (
           <>
-            <Link href={process.env.NEXT_PUBLIC_ADMIN_URL} className="nav-link">
+            <Link
+              href={process.env.NEXT_PUBLIC_ADMIN_URL || ""}
+              className="nav-link"
+            >
               Admin Dashboard
             </Link>
             {/* Add more admin-specific links here */}
@@ -29,7 +32,7 @@ export function MainNav() {
         return (
           <>
             <Link
-              href={process.env.NEXT_PUBLIC_DOCTOR_URL}
+              href={process.env.NEXT_PUBLIC_DOCTOR_URL || ""}
               className="nav-link"
             >
               Doctor Dashboard
@@ -40,7 +43,7 @@ export function MainNav() {
         return (
           <>
             <Link
-              href={process.env.NEXT_PUBLIC_PATIENT_URL}
+              href={process.env.NEXT_PUBLIC_PATIENT_URL || ""}
               className="nav-link"
             >
               Patient Dashboard
