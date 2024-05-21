@@ -1,24 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
-import { MainNav } from "~/components/navbar";
-import { Button } from "~/components/ui/button";
+import { MainNav } from "components/navbar";
+import { Button } from "components/ui/button";
 import { Bot, HeartPulse, MessagesSquare, PersonStanding } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-export function useSession2(){
-       const mockSession = {
-           expires: new Date(Date.now() + 2 * 86400).toISOString(),
-	       user: { name:"Admin", username: "admin", email:"johnsonchetty@gmail.com", id:1, image:"image.png" }
-	       
-	         };
-		 	 
-	return {data: mockSession, status: 'authenticated'};
-}
-
-export default function Home() {		
+export default function Home() {
   const { data: session } = useSession();
-  
+
   const features = [
     {
       icon: <Bot size={50} />,
@@ -52,7 +42,7 @@ export default function Home() {
       </Head>
       <main className="min-h-screen">
         <MainNav />
-        <div className="h-screen flex w-screen flex-col items-center justify-center gap-10">
+        <div className="flex h-screen w-screen flex-col items-center justify-center gap-10">
           <h1 className="flex items-center gap-2 text-3xl">
             Welcome, {session?.user?.name ?? "Guest, Please Login to continue"}!{" "}
             {session && (
@@ -66,22 +56,32 @@ export default function Home() {
             )}
           </h1>
           <div className="space-x-5">
-            <Link href={session ? "/query" : "/api/auth/signin"}>
-              <Button disabled={!session}>
-                <MessagesSquare className="mr-2" />
-                Ask Gaia
-              </Button>
-            </Link>
+            {session && (
+              <Link href={"/query"}>
+                <Button>
+                  <MessagesSquare className="mr-2" />
+                  Ask Gaia
+                </Button>
+              </Link>
+            )}
 
-            <Link href={session ? "/support" : "/api/auth/signin"}>
-              <Button disabled={!session}>
-                <MessagesSquare className="mr-2" />
-                Talk to Gaia
-              </Button>
-            </Link>
+            {session && (
+              <Link href={"/support"}>
+                <Button>
+                  <MessagesSquare className="mr-2" />
+                  Talk to Gaia
+                </Button>
+              </Link>
+            )}
+
+            {!session && (
+              <Link href="/auth/register">
+                <Button>Register</Button>
+              </Link>
+            )}
           </div>
 
-          <h1 className="text-center text-3xl font-bold mt-5">Features</h1>
+          <h1 className="mt-5 text-center text-3xl font-bold">Features</h1>
           <div className="flex flex-wrap justify-center gap-5">
             {features.map((feature) => (
               <div
@@ -90,8 +90,12 @@ export default function Home() {
               >
                 <div>{feature.icon}</div>
                 <div className="flex flex-col gap-1">
-                  <h2 className="text-xl lg:text-2xl font-bold">{feature.featureName}</h2>
-                  <p className="text-sm lg:text-md text-gray-500">{feature.shortDescription}</p>
+                  <h2 className="text-xl font-bold lg:text-2xl">
+                    {feature.featureName}
+                  </h2>
+                  <p className="lg:text-md text-sm text-gray-500">
+                    {feature.shortDescription}
+                  </p>
                 </div>
               </div>
             ))}

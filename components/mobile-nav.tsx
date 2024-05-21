@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
-import { cn } from "src/lib/utils";
-import { useLockBody } from "src/hooks/use-lock-body";
+import { cn } from "lib/utils";
+import { useLockBody } from "hooks/use-lock-body";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { LogIn, LogOut } from "lucide-react";
@@ -23,8 +23,11 @@ export function MobileNav({ session }: { session: Session | null }) {
           <Image src="/logo.png" width={32} height={32} alt="Logo" />
           <span className="font-bold">Gaia</span>
         </Link>
-        <div className="flex space-x-2 items-center justify-start">
-          <Button className="w-fit" onClick={session ? () => signOut() : () => signIn("google")}>
+        <div className="flex items-center justify-start space-x-2">
+          <Button
+            className="w-fit"
+            onClick={session ? () => signOut() : () => signIn("google")}
+          >
             {session ? "Sign Out" : "Sign In"}
             {session ? (
               <LogIn className="ml-2" size={18} />
