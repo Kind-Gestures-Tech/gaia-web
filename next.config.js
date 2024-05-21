@@ -2,11 +2,24 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import("./env.mjs");
+require("./env");
 
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  experimental: {
+    swcPlugins: [["next-superjson-plugin", {}]],
+  },
+
+  webpack: (config, { isServer }) => {
+    config.experiments = {
+      asyncWebAssembly: true,
+      layers: true,
+      // or if you prefer syncWebAssembly:
+      // syncWebAssembly: true,
+    };
+    return config;
+  },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
@@ -23,4 +36,4 @@ const config = {
   },
 };
 
-export default config;
+module.exports = config;

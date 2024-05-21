@@ -11,9 +11,10 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 import superjson from "superjson";
+
 import { ZodError } from "zod";
-import { getServerAuthSession } from "~/server/auth";
-import { prisma } from "~/server/db";
+import { getServerAuthSession } from "server/auth";
+import { prisma } from "server/db";
 
 /**
  * 1. CONTEXT
@@ -58,7 +59,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   // const session = {expires: new Date(Date.now() + 2 * 86400).toISOString(),
   // 	   user: { username: "admin", email:"johnsonchetty@gmail.com", id:"1", languageSpeak:"en-US"}, status: 'authenticated'};
-
 
   // console.log("Session obj at TRPC.ts");
   // console.log(session);
@@ -115,8 +115,8 @@ export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
- if (!ctx.session?.user) {
-    //ctx.session = {"user":{"id":1,"name":"admin"}};     
+  if (!ctx.session?.user) {
+    //ctx.session = {"user":{"id":1,"name":"admin"}};
     throw new TRPCError({ code: "UNAUTHORIZED" });
     //console.log("ctx! :::");
     //console.log(ctx.session);

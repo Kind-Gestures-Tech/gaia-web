@@ -19,13 +19,13 @@ const SignIn: React.FC<SignInProps> = ({ providers }) => {
     if (session) {
       switch (session.user.role) {
         case "SYSTEM_ADMIN":
-          router.push(process.env.NEXT_PUBLIC_ADMIN_URL);
+          router.push(process.env.NEXT_PUBLIC_ADMIN_URL || "");
           break;
         case "DOCTOR":
-          router.push(process.env.NEXT_PUBLIC_DOCTOR_URL);
+          router.push(process.env.NEXT_PUBLIC_DOCTOR_URL || "");
           break;
         case "PATIENT":
-          router.push(process.env.NEXT_PUBLIC_PATIENT_URL);
+          router.push(process.env.NEXT_PUBLIC_PATIENT_URL || "");
           break;
         default:
           router.push("/");

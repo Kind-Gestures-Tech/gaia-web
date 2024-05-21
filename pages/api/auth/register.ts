@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { hash } from "bcrypt";
-import { prisma } from "~/server/db";
+import { prisma } from "server/db";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {

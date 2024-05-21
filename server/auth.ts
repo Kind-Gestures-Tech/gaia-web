@@ -6,7 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { env } from "env.mjs";
+const { env } = await import("env.js");
 import { prisma } from "server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
