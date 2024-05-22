@@ -6,7 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-const { env } = await import("env.js");
+
 import { prisma } from "server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
@@ -69,8 +69,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -89,7 +89,7 @@ export const authOptions: NextAuthOptions = {
         if (user && user.password) {
           const isValid = await bcrypt.compare(
             credentials.password,
-            user.password
+            user.password,
           );
           if (isValid) {
             return {
@@ -124,7 +124,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   jwt: {
-    secret: env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
   },
 };
 
