@@ -44,7 +44,7 @@ const Register: React.FC = () => {
         role,
       });
       if (response.status === 200) {
-        router.push("/auth/signin");
+        router.push("/config/config");
       }
     } catch (error) {
       setError("Registration failed. Please try again.");

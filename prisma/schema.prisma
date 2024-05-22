@@ -66,6 +66,43 @@ model User {
   Goals         Goals[]
   Conversation  Conversation[]
   role          Role           @default(PATIENT)
+  company       Company?       @relation(fields: [companyId], references: [id])
+  companyId     String?
+  isConfigured  Boolean        @default(false)
+  Configuration Configuration?
+}
+
+model Configuration {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  useOfApis        Boolean
+  telemetryEnabled Boolean
+  patientSelfHelp  Boolean
+  aiModels         String[]
+  apiUrl           String
+  vectorDbUrl      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user    User      @relation(fields: [userId], references: [id])
+  AiModel AiModel[]
+}
+
+model AiModel {
+  id              String        @id @default(uuid())
+  name            String
+  configurationId String
+  configuration   Configuration @relation(fields: [configurationId], references: [id])
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  purpose   String
+  telemetry Boolean
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
