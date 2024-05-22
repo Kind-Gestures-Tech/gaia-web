@@ -42,7 +42,7 @@ function handleSubdomainRouting(
   path: string,
   subdomain: string,
   req: NextRequest,
-  url: URL
+  url: URL,
 ) {
   // Allow access to signin and register pages without session
   if (!session && (path === "/auth/signin" || path === "/auth/register")) {
@@ -52,10 +52,10 @@ function handleSubdomainRouting(
   // Redirect to signin if no session and not on signin or register page
   if (!session) {
     const callbackUrl = encodeURIComponent(
-      `${url.protocol}//${req.headers.get("host")}${url.pathname}${url.search}`
+      `${url.protocol}//${req.headers.get("host")}${url.pathname}${url.search}`,
     );
     return NextResponse.rewrite(
-      new URL(`/auth/signin?callbackUrl=${callbackUrl}`, req.url)
+      new URL(`/auth/signin?callbackUrl=${callbackUrl}`, req.url),
     );
   }
 
@@ -72,7 +72,7 @@ function handleDefaultRouting(
   session: any,
   path: string,
   hostname: string,
-  req: NextRequest
+  req: NextRequest,
 ) {
   // Special case for the root domain or localhost
   if (
