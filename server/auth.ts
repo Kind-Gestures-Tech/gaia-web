@@ -10,6 +10,19 @@ import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { createLogger, transports, format } from "winston";
+
+export const logger = createLogger({
+  level: "info",
+  format: format.combine(
+    format.colorize(),
+    format.timestamp(),
+    format.printf(
+      ({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`,
+    ),
+  ),
+  transports: [new transports.Console()],
+});
 
 const isProduction = process.env.NODE_ENV === "production";
 const COOKIE_DOMAIN = isProduction
@@ -128,6 +141,7 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+logger.info("Initializing NextAuth with settings:", authOptions);
 /**
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
  *

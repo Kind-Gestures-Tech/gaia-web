@@ -6,8 +6,9 @@ require("./env");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  basePath: "",
   reactStrictMode: true,
-  webpack: (config, { isServer }) => {
+  webpack: (config, {}) => {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
