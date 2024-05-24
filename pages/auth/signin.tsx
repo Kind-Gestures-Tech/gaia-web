@@ -2,7 +2,7 @@ import { getProviders, signIn, useSession, getSession } from "next-auth/react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type SignInProps = {
   providers: Record<string, any>;
@@ -46,7 +46,7 @@ const SignIn: React.FC<SignInProps> = ({ providers }) => {
     if (result?.error) {
       setError(result.error);
     } else {
-      router.reload(); // Reload the page to ensure session is updated
+      router.refresh(); // Reload the page to ensure session is updated
     }
   };
 

@@ -7,10 +7,6 @@ require("./env");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  experimental: {
-    swcPlugins: [["next-superjson-plugin", {}]],
-  },
-
   webpack: (config, { isServer }) => {
     config.experiments = {
       asyncWebAssembly: true,

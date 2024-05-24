@@ -1,6 +1,5 @@
-// pages/auth/register.tsx
 import { useState, FormEvent, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const Register: React.FC = () => {

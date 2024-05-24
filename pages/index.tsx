@@ -1,12 +1,9 @@
 import { useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Bot, HeartPulse, MessagesSquare, PersonStanding } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { Button } from "components/ui/button";
 
 const navigation = [
   { name: "Home", href: "#" },
