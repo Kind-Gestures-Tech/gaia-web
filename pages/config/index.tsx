@@ -22,10 +22,10 @@ const modelOptions: Options<ModelOption> = [
 ];
 
 const embeddingOptions: Options<ModelOption> = [
-  { value: "Kind Health Embedding", label: "KH Embedding", type: "local" },
-  { value: "LM Studio", label: "LM Studio", type: "local" },
-  { value: "Open AI", label: "Cloud Embedding 1", type: "cloud" },
-  { value: "Azure Open AI", label: "Cloud Embedding 2", type: "cloud" },
+  { value: "Local Embedding 1", label: "Local Embedding 1", type: "local" },
+  { value: "Local Embedding 2", label: "Local Embedding 2", type: "local" },
+  { value: "Cloud Embedding 1", label: "Cloud Embedding 1", type: "cloud" },
+  { value: "Cloud Embedding 2", label: "Cloud Embedding 2", type: "cloud" },
 ];
 
 export default function Configuration() {
@@ -42,6 +42,7 @@ export default function Configuration() {
   const [apiUrl, setApiUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [vectorDbUrl, setVectorDbUrl] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
   const router = useRouter();
 
   const handleNext = () => setStep(step + 1);
@@ -54,7 +55,7 @@ export default function Configuration() {
       return;
     }
 
-    const res = await fetch("/api/configuration", {
+    const res = await fetch("/api/config", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,12 +75,14 @@ export default function Configuration() {
       }),
     });
     if (res.ok) {
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000); // Hide after 3 seconds
       router.push("/dashboard");
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-gray-100 p-4">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md rounded-lg bg-white p-6 shadow-md"
@@ -350,6 +353,11 @@ export default function Configuration() {
           </>
         )}
       </form>
+      {showNotification && (
+        <div className="fixed bottom-4 right-4 rounded-lg bg-green-500 px-4 py-2 text-white shadow-lg">
+          Configuration saved successfully!
+        </div>
+      )}
     </div>
   );
 }

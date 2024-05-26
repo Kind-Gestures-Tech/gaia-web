@@ -48,52 +48,38 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  password      String
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  age           Int?
-  height        Float?
-  weight        Float?
-  languageSpeak String?        @default("en-US")
-  languageText  String?        @default("en-US")
-  gender        GENDER?
-  HealthRecord  HealthRecord[]
-  Goals         Goals[]
-  Conversation  Conversation[]
-  role          Role           @default(PATIENT)
-  company       Company?       @relation(fields: [companyId], references: [id])
-  companyId     String?
-  isConfigured  Boolean        @default(false)
-  Configuration Configuration?
+  id             String           @id @default(cuid())
+  name           String?
+  email          String?          @unique
+  password       String
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  languageSpeak  String?          @default("en-US")
+  languageText   String?          @default("en-US")
+  gender         GENDER?
+  HealthRecords  HealthRecord[]
+  Goals          Goals[]
+  Conversations  Conversation[]
+  role           Role             @default(PATIENT)
+  company        Company?         @relation(fields: [companyId], references: [id])
+  companyId      String?
+  isConfigured   Boolean          @default(false)
+  UserWorkspaces UserWorkspace[]
+  invitations    UserInvitation[]
 }
 
-model Configuration {
-  id                String   @id @default(uuid())
-  userId            String   @unique
-  useOfApis         Boolean
-  telemetryEnabled  Boolean
-  patientSelfHelp   Boolean
-  aiModels          String[]
-  selectedEmbedding String?
-  apiUrl            String
-  vectorDbUrl       String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  user    User      @relation(fields: [userId], references: [id])
-  AiModel AiModel[]
-}
-
-model AiModel {
-  id              String        @id @default(uuid())
-  name            String
-  configurationId String
-  configuration   Configuration @relation(fields: [configurationId], references: [id])
+model UserInvitation {
+  id         String    @id @default(cuid())
+  email      String
+  role       Role
+  token      String    @unique
+  expiresAt  DateTime
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String?
+  createdAt  DateTime  @default(now())
+  acceptedAt DateTime?
 }
 
 model Company {
@@ -144,6 +130,44 @@ model Conversation {
   author    AUTHOR
   message   String
   timestamp DateTime          @default(now())
+}
+
+model UserWorkspace {
+  id                   String                @id @default(cuid())
+  userId               String
+  name                 String
+  User                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  Configuration        Configuration?
+  WorkspaceInvitations WorkspaceInvitation[]
+}
+
+model Configuration {
+  id                String   @id @default(uuid())
+  workspaceId       String   @unique
+  useOfApis         Boolean
+  telemetryEnabled  Boolean
+  patientSelfHelp   Boolean
+  aiModels          String[]
+  selectedEmbedding String?
+  apiUrl            String
+  vectorDbUrl       String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  workspace UserWorkspace @relation(fields: [workspaceId], references: [id])
+}
+
+model WorkspaceInvitation {
+  id            String        @id @default(cuid())
+  email         String
+  role          Role
+  token         String        @unique
+  expiresAt     DateTime
+  acceptedAt    DateTime?
+  workspaceId   String
+  UserWorkspace UserWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
 enum GENDER {

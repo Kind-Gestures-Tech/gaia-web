@@ -57,25 +57,21 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
-      console.log("Session callback - Token:", token);
       if (token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
       } else {
         console.error("No token found in session callback");
       }
-      console.log("Session callback - Session:", session);
       return session;
     },
     async jwt({ token, user }) {
-      console.log("JWT callback - User:", user);
       if (user) {
         token.id = user.id;
         token.role = user.role;
       } else {
         console.error("No user found in JWT callback");
       }
-      console.log("JWT callback - Token:", token);
       return token;
     },
   },

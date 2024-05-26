@@ -10,7 +10,11 @@
       NODE_ENV: z.string(),
       GOOGLE_CLIENT_ID: z.string(),
       GOOGLE_CLIENT_SECRET: z.string(),
-
+      SENDGRID_API_KEY: z.string(),
+      EXTERNAL_API_URL: z.string(),
+      SMTP_USERNAME: z.string(),
+      SMTP_PASSWORD: z.string(),
+      SMTP_SERVER: z.string(),
       // Add other server environment variables here
     },
     client: {
@@ -32,6 +36,11 @@
       NODE_ENV: process.env.NODE_ENV,
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+      EXTERNAL_API_URL: process.env.EXTERNAL_API_URL,
+      SMTP_SERVER: process.env.SMTP_SERVER,
+      SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+      SMTP_USERNAME: process.env.SMTP_USERNAME,
       // Add other runtime environment variables here
     },
   });
