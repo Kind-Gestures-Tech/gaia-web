@@ -7,14 +7,25 @@ import Select, { Options } from "react-select";
 type ModelOption = {
   value: string;
   label: string;
+  type: "local" | "cloud";
 };
 
 const modelOptions: Options<ModelOption> = [
-  { value: "GPT-3", label: "GPT-3" },
-  { value: "BERT", label: "BERT" },
-  { value: "T5", label: "T5" },
-  { value: "RoBERTa", label: "RoBERTa" },
-  { value: "GPT-4", label: "GPT-4" },
+  { value: "Ollam", label: "Ollam", type: "local" },
+  { value: "LM Studio", label: "LM Studio", type: "local" },
+  { value: "Local AI", label: "Local AI", type: "local" },
+  { value: "GPT-3", label: "GPT-3", type: "cloud" },
+  { value: "BERT", label: "BERT", type: "cloud" },
+  { value: "T5", label: "T5", type: "cloud" },
+  { value: "RoBERTa", label: "RoBERTa", type: "cloud" },
+  { value: "GPT-4", label: "GPT-4", type: "cloud" },
+];
+
+const embeddingOptions: Options<ModelOption> = [
+  { value: "Kind Health Embedding", label: "KH Embedding", type: "local" },
+  { value: "LM Studio", label: "LM Studio", type: "local" },
+  { value: "Open AI", label: "Cloud Embedding 1", type: "cloud" },
+  { value: "Azure Open AI", label: "Cloud Embedding 2", type: "cloud" },
 ];
 
 export default function Configuration() {
@@ -25,8 +36,11 @@ export default function Configuration() {
   const [telemetry, setTelemetry] = useState(false);
   const [patientSelfHelp, setPatientSelfHelp] = useState(false);
   const [useOfApis, setUseOfApis] = useState(false);
-  const [aiModels, setAiModels] = useState<ModelOption[]>([]);
+  const [selectedModel, setSelectedModel] = useState<ModelOption | null>(null);
+  const [selectedEmbedding, setSelectedEmbedding] =
+    useState<ModelOption | null>(null);
   const [apiUrl, setApiUrl] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const [vectorDbUrl, setVectorDbUrl] = useState("");
   const router = useRouter();
 
@@ -51,8 +65,10 @@ export default function Configuration() {
         telemetry,
         patientSelfHelp,
         useOfApis,
-        aiModels: aiModels.map((model) => model.value), // Convert selected models to array of values
+        selectedModel: selectedModel?.value, // Save selected model
+        selectedEmbedding: selectedEmbedding?.value, // Save selected embedding
         apiUrl,
+        apiKey,
         vectorDbUrl,
         userId: session.user.id,
       }),
@@ -103,40 +119,87 @@ export default function Configuration() {
                 <option value="System Admins">System Admins</option>
               </select>
             </div>
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={telemetry}
-                  onChange={(e) => setTelemetry(e.target.checked)}
-                  className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                />
-                <label className="ml-2 text-sm font-medium">
-                  Telemetry Enabled
-                </label>
+            <fieldset className="border-b border-t border-gray-200">
+              <legend className="sr-only">Configuration Options</legend>
+              <div className="divide-y divide-gray-200">
+                <div className="relative flex items-start pb-4 pt-3.5">
+                  <div className="min-w-0 flex-1 text-sm leading-6">
+                    <label
+                      htmlFor="telemetry"
+                      className="font-medium text-gray-900"
+                    >
+                      Telemetry Enabled
+                    </label>
+                    <p id="telemetry-description" className="text-gray-500">
+                      Enable or disable telemetry data collection.
+                    </p>
+                  </div>
+                  <div className="ml-3 flex h-6 items-center">
+                    <input
+                      id="telemetry"
+                      aria-describedby="telemetry-description"
+                      name="telemetry"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      checked={telemetry}
+                      onChange={(e) => setTelemetry(e.target.checked)}
+                    />
+                  </div>
+                </div>
+                <div className="relative flex items-start pb-4 pt-3.5">
+                  <div className="min-w-0 flex-1 text-sm leading-6">
+                    <label
+                      htmlFor="patientSelfHelp"
+                      className="font-medium text-gray-900"
+                    >
+                      Patient Self Help Enabled
+                    </label>
+                    <p
+                      id="patientSelfHelp-description"
+                      className="text-gray-500"
+                    >
+                      Allow patients to access self-help resources.
+                    </p>
+                  </div>
+                  <div className="ml-3 flex h-6 items-center">
+                    <input
+                      id="patientSelfHelp"
+                      aria-describedby="patientSelfHelp-description"
+                      name="patientSelfHelp"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      checked={patientSelfHelp}
+                      onChange={(e) => setPatientSelfHelp(e.target.checked)}
+                    />
+                  </div>
+                </div>
+                <div className="relative flex items-start pb-4 pt-3.5">
+                  <div className="min-w-0 flex-1 text-sm leading-6">
+                    <label
+                      htmlFor="useOfApis"
+                      className="font-medium text-gray-900"
+                    >
+                      Use of APIs
+                    </label>
+                    <p id="useOfApis-description" className="text-gray-500">
+                      Enable or disable the use of external APIs.
+                    </p>
+                  </div>
+                  <div className="ml-3 flex h-6 items-center">
+                    <input
+                      id="useOfApis"
+                      aria-describedby="useOfApis-description"
+                      name="useOfApis"
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      checked={useOfApis}
+                      onChange={(e) => setUseOfApis(e.target.checked)}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="mb-4 flex items-center">
-              <input
-                type="checkbox"
-                checked={patientSelfHelp}
-                onChange={(e) => setPatientSelfHelp(e.target.checked)}
-                className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-              />
-              <label className="ml-2 text-sm font-medium">
-                Patient Self Help Enabled
-              </label>
-            </div>
-            <div className="mb-4 flex items-center">
-              <input
-                type="checkbox"
-                checked={useOfApis}
-                onChange={(e) => setUseOfApis(e.target.checked)}
-                className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-              />
-              <label className="ml-2 text-sm font-medium">Use of APIs</label>
-            </div>
-            <div className="flex justify-between">
+            </fieldset>
+            <div className="mt-4 flex justify-end">
               <button
                 type="button"
                 onClick={handleNext}
@@ -154,11 +217,85 @@ export default function Configuration() {
                 AI LLM Models
               </label>
               <Select
-                isMulti
                 options={modelOptions}
-                value={aiModels}
-                onChange={(selectedOptions) =>
-                  setAiModels(selectedOptions as ModelOption[])
+                value={selectedModel}
+                onChange={(selectedOption) =>
+                  setSelectedModel(selectedOption as ModelOption)
+                }
+                className="text-sm"
+              />
+            </div>
+            {selectedModel && selectedModel.type === "local" && (
+              <>
+                <div className="mb-4">
+                  <label className="mb-1 block text-sm font-medium">
+                    API URL
+                  </label>
+                  <input
+                    type="text"
+                    value={apiUrl}
+                    onChange={(e) => setApiUrl(e.target.value)}
+                    className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="mb-1 block text-sm font-medium">
+                    API Key
+                  </label>
+                  <input
+                    type="text"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+              </>
+            )}
+            {selectedModel && selectedModel.type === "cloud" && (
+              <div className="mb-4">
+                <label className="mb-1 block text-sm font-medium">
+                  API Key
+                </label>
+                <input
+                  type="text"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            )}
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="rounded-lg bg-black px-4 py-2 text-sm text-white transition duration-150 hover:bg-gray-800"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="rounded-lg bg-black px-4 py-2 text-sm text-white transition duration-150 hover:bg-gray-800"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <div className="mb-4">
+              <label className="mb-1 block text-sm font-medium">
+                Embedding Preferences
+              </label>
+              <Select
+                options={embeddingOptions}
+                value={selectedEmbedding}
+                onChange={(selectedOption) =>
+                  setSelectedEmbedding(selectedOption as ModelOption)
                 }
                 className="text-sm"
               />
@@ -181,18 +318,8 @@ export default function Configuration() {
             </div>
           </>
         )}
-        {step === 3 && (
+        {step === 4 && (
           <>
-            <div className="mb-4">
-              <label className="mb-1 block text-sm font-medium">API URL</label>
-              <input
-                type="text"
-                value={apiUrl}
-                onChange={(e) => setApiUrl(e.target.value)}
-                className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
             <div className="mb-4">
               <label className="mb-1 block text-sm font-medium">
                 Vector DB URL

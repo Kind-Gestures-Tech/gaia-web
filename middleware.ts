@@ -24,6 +24,7 @@ export default async function middleware(req: NextRequest) {
   // Check for session token
   const session = await getToken({ req });
   console.log(session);
+
   // Handle subdomain routing
   switch (subdomain) {
     case "admin":
@@ -79,8 +80,24 @@ function handleDefaultRouting(
     hostname === "localhost" ||
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
-    return NextResponse.rewrite(new URL(`${path}`, req.url));
+    // Redirect to signin if no session
+    if (!session && path !== "/auth/signin" && path !== "/auth/register") {
+      const callbackUrl = encodeURIComponent(
+        `${req.nextUrl.protocol}//${req.headers.get("host")}${req.nextUrl.pathname}${req.nextUrl.search}`,
+      );
+      return NextResponse.rewrite(
+        new URL(`/auth/signin?callbackUrl=${callbackUrl}`, req.url),
+      );
+    }
+
+    // Redirect to home if session exists and trying to access signin or register page
+    if (session && (path === "/auth/signin" || path === "/auth/register")) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    return NextResponse.next();
   }
+
   // Rewrite for other cases
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 }
